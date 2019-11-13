@@ -192,3 +192,22 @@ const Pi = 3.14
 const Pi2 = 2 * Pi
 ```
 
+
+
+```go
+const(
+    Pi = 3.14
+    Pi2 = 2 * Pi
+)
+```
+
+
+
+```go
+const( //n1,n2,n3的值均为100
+    n1 = 100
+    n2
+    n3
+)
+```
+
