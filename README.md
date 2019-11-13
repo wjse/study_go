@@ -13,7 +13,7 @@
 安装完成后通过命令行执行
 
 ```shell
-			go version
+go version
 ```
 
 验证查看Go版本信息
@@ -29,11 +29,11 @@ Linux环境编辑
 ```shell
 sudo vi ~./bash_profile
 
-​				export GOROOT='your go home'
+export GOROOT='your go home'
 
-​				export GOPATH='your dir'
+export GOPATH='your dir'
 
-​				export PATH=$PATH$:$GOROOT$/bin
+export PATH=$PATH$:$GOROOT$/bin
 ```
 
 保存后source ~./bash_profile使其生效
@@ -114,11 +114,17 @@ func main(){
 
 
 
+
+
 ####25个关键字
 
 
 
+
+
 #### 37个保留字
+
+
 
 
 
