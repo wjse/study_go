@@ -602,3 +602,220 @@ func changeString(){
 }
 ```
 
+
+
+### if  for
+
+```go
+package main
+
+import "fmt"
+
+func main(){
+
+   //if
+   //基本
+   age := 18
+   if age > 18{
+      fmt.Println("老男孩")
+   }else if age == 18{
+      fmt.Println("刚好成年")
+   }else{
+      fmt.Println("小屁孩")
+   }
+
+   //局部
+   if age := 20 ; age < 35 && age > 18{
+      fmt.Println("还年轻")
+   }else if age < 18{
+      fmt.Println("small boy")
+   }
+
+   //for
+   //基本
+   for i := 0 ; i < 10 ; i++{
+      fmt.Println(i)
+   }
+
+   //省略变量
+   i := 5
+   for ; i < 10 ; i++{
+      fmt.Println(i)
+   }
+
+   //省略结束
+   for ; i < 10 ;{
+      fmt.Println(i)
+      i++
+   }
+
+   //无限循环
+   //for {
+   // fmt.Println(1)
+   //}
+
+   //for range
+   s := "hello沙河"
+   for i , v := range s{
+      fmt.Printf("%d %c \n" , i , v)
+   }
+}
+```
+
+
+
+**注意** for range循环中输出格式为：
+
+```shell
+0 h 
+1 e 
+2 l 
+3 l 
+4 o 
+5 沙 
+8 河 
+```
+
+下标从5直接编程8的原因是一个unicode字符占3个字节！！！
+
+
+
+### 复合数据类型
+
+#### 数组
+
+```go
+//定义一个长度为5的int数组
+var array [3]int
+```
+
+数组定义，数组长度不可变
+
+
+
+```go
+package main
+
+import "fmt"
+
+/*
+数组
+存放元素的容器
+必须指定存放的元素类型和长度
+*/
+func main() {
+   //数组定义
+   var a1 [3]int
+   var a2 [4]int
+   fmt.Printf("%T %T \n", a1, a2)
+
+   //数组初始化
+   //如果不初始化，默认均为数据类型默认值
+   fmt.Println(a1, a2)
+
+   a1 = [3]int{1, 2, 3}
+   fmt.Println(a1)
+
+   //[...]根据初始值自动推断数组长度
+   a10 := [...]int{1, 2, 3, 4, 5}
+   fmt.Println(a10)
+   fmt.Println(len(a10))
+
+   a3 := [5]int{1, 2}
+   fmt.Println(a3)
+
+   //根据索引来初始化
+   a4 := [5]int{0: 4, 4: 3}
+   fmt.Println(a4)
+
+   //数组遍历
+   cities := [3]string{"北京", "成都", "广州"}
+   //根据索引遍历
+   for i := 0; i < len(cities); i++ {
+      fmt.Println(cities[i])
+   }
+
+   //for range
+   for i, v := range cities {
+      fmt.Println(i, v)
+   }
+
+   //多维数组
+   //[[1,2] , [3,4] , [5,6]]
+   aa1 := [3][2]int{{1, 2}, {3, 4}, {5, 6}}
+   fmt.Println(aa1)
+
+   //多维数组遍历
+   for _, v := range aa1 {
+      fmt.Println(v)
+      for _, v2 := range v {
+         fmt.Println(v2)
+      }
+   }
+
+   //数组是值类型
+   b1 := [3]int{1, 2, 3} //[1 2 3]
+   b2 := b1              //[1 2 3] ctrl+c => ctrl+v
+   b2[0] = 100           //b2:[100 2 3]
+   fmt.Println(b1, b2)   //b1:?
+
+   //数组值类型比较
+   c1 := [3]int{1 ,2 ,3}
+   c2 := [3]int{1 ,2 ,3}
+   fmt.Println(c1 == c2)
+}
+```
+
+
+
+数组是值类型，赋值和传参会复制整个数组。因此改变副本的值，不会改变本身的值
+
+
+
+#### 切片（slice）
+
+切片是一个拥有相同类型元素的可变长度的序列。它是基于数组类型做的一层封装。类似于Java的ArrayList。
+
+切片是一个引用类型，它的内部结构包含*地址*，*长度*，和*容量*。切片一般用于快速的操作一块数据集合。
+
+
+
+```go
+var name []T//切片定义
+```
+
+
+
+**切片cap与len的区别**
+
+切片的长度就是它元素的个数
+
+切片的容量是底层数组从切片第一个元素到最后一个元素的容量
+
+```go
+var a [8]int = [8]int{1 , 2 , 3 , 4 , 5 , 6 , 7 , 8}
+s1 := a[0 : 5]
+fmt.Println(len(s1) , cap(s1)) //len = 5 , cap = 8
+```
+
+
+
+![](./README.assets/slice1.png)
+
+```go
+s2 := [3 : 6]
+fmt.Println(len(s2) , cap(s2)) //len = 3  , cap = 5
+```
+
+![](./README.assets/slice2.png)
+
+
+
+容量是指底层数组的大小，长度指可以使用的大小
+
+容量的用处在哪？在与当你用 append扩展长度时，如果新的长度小于容量，不会更换底层数组，否则，go 会新申请一个底层数组，拷贝这边的值过去，把原来的数组丢掉。也就是说，**容量的用途是：在数据拷贝和内存申请的消耗与内存占用之间提供一个权衡**。
+
+而长度，则是为了帮助你限制切片可用成员的数量，提供边界查询的。所以用 make 申请好空间后，需要注意不要越界【越 len 】
+
+
+
