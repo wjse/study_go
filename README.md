@@ -927,3 +927,91 @@ s3 := make([]int , 0) //len(s3) = 0 , cap(s3) = 0 , s3 != nil //true
 ```
 
 所以要判断一个切片是否是空的，要用len(s) == 0来判断，不应该使用 s == nil
+
+
+
+##### append
+
+```go
+func sliceAppend(){
+   s1 := []string{"北京" , "上海" , "深圳"}
+   fmt.Printf("len(s1) = %d cap(s1) = %d %v\n" , len(s1) , cap(s1) , s1)
+
+   //append追加元素，原来底层数组放不下的时候，go将创建一个新的数组来存放元素
+   //所以s1这里接收的是一个新的数组
+   s1 = append(s1, "成都")
+   fmt.Printf("len(s1) = %d cap(s1) = %d %v\n" , len(s1) , cap(s1) , s1)
+
+   s2 := []string{"广州" , "杭州"}
+   s1 = append(s1 , s2...)//...表示拆开
+   fmt.Printf("len(s1) = %d cap(s1) = %d %v\n" , len(s1) , cap(s1) , s1)
+
+   //简原来的的容量小于1024时直接扩充至原来的2倍 ， 大于1024时每次扩充1/4
+   s1 = append(s1, "重庆")
+   fmt.Printf("len(s1) = %d cap(s1) = %d %v\n" , len(s1) , cap(s1) , s1)
+}
+```
+
+
+
+##### append扩容策略
+
+slice.go源码分析
+
+![](./README.assets/1574240539191.jpg)
+
+- 首先判断，如果新申请容量（cap）大于2倍的旧容量（old.cap）,最终容量（newcap）就是新申请的容量
+- 否则判断，如果旧切片的长度小于1024，则最终容量（newcap）就是旧容量（old.cap）的两倍，既（newcap = doublecap）
+- 否则判断，如果旧切片长度大于等于1024，则最终容量（newcap）从旧容量（old.cap）开始循环增加原来的1/4，既（newcap=old.cap , for {newcap += newcap/4}）直到最终容量（newcap）大于等于新申请的容量（cap），既（newcap >= cap）
+- 如果最终容量（cap）计算溢出，则最终容量（cap）就是新申请的容量（cap）
+
+
+
+##### copy
+
+```go
+func sliceCopy() {
+   a1 := []int{1 ,3 , 5}
+   a2 := a1 //赋值 ， 指向同一个内存
+   var a3 = make([]int , 3 , 3)
+   copy(a3 , a2) //copy , 创建了一个新的数组 ， 新开辟了内存
+   fmt.Println(a1 , a2 , a3)
+   a1[0] = 100
+   fmt.Println(a1 , a2 , a3)
+}
+```
+
+
+
+##### 删除元素
+
+go中切片没有删除元素，可使用切片本身特性来删除元素
+
+```go
+func sliceDel(){
+   a := []int{1 , 2 , 3 , 4 , 5}
+
+   //要删除索引为2的元素，a[:2]从0开始到2但不包含2[1 2] ， a[3:]...从3开始到最后[4 5]
+   a = append(a[:2] , a[3:]...)
+   fmt.Println(a)
+   fmt.Printf("cap(a) = %d \n" , cap(a))
+
+   a1 := [...]int{1 ,3 ,5} //数组
+   s1 := a1[:] //切片
+   fmt.Println(s1 , len(s1) , cap(s1))
+   fmt.Printf("%p \n" , &a1)
+   //1.切片不保存具体的值
+   //2.切片对应一个底层的数组
+   //3.底层数组占用一块联系的数组
+   s1 = append(s1[:1] , s1[2:]...)
+   fmt.Println(s1 , len(s1) , cap(s1))
+   fmt.Println(a1)
+   fmt.Printf("%p \n" , &a1)
+}
+```
+
+
+
+##### 练习
+
+![2](./README.assets/2.jpg)
