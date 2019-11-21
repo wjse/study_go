@@ -2,6 +2,8 @@
 
 # 开始
 
+[在线中文文档](https://studygolang.com/pkgdoc)
+
 ## Go安装
 
 
@@ -1062,3 +1064,70 @@ func make(t Type , size ...IntegerType) Type
 ```
 
 `make`函数是无可替代的，在使用`slice`，`map`，`channel`时，都需要使用make进行初始化后才可进行操作。
+
+
+
+#### map
+
+#### map定义
+
+```go
+map[KeyType]ValueType
+```
+
+
+
+#### 按照指定顺序遍历map
+
+```go
+func getMapValueBySort(){
+   rand.Seed(time.Now().UnixNano()) //初始化随机数种子
+
+   var scoreMap = make(map[string]int , 200)//初始化map
+
+   //map放入元素
+   for i := 0 ; i < 100 ; i++{
+      key := fmt.Sprintf("stu%02d" , i) //生成stu开头的字符串
+      value := rand.Intn(100) //生成0-99的随机整数
+      scoreMap[key] = value
+   }
+
+   var keys = make([]string , 0 , 200) //初始化用来存放key的切片
+
+   //将map的key放入keys切片中
+   for key := range scoreMap{
+      keys = append(keys , key)
+   }
+
+   //对keys进行排序
+   sort.Strings(keys)
+
+   //遍历排好序的keys切片，遍历切片取出map中对应的value
+   for _ , key := range keys{
+      fmt.Println(key , scoreMap[key])
+   }
+}
+```
+
+
+
+#### 元素为map的切片
+
+```go
+func mapOfSlice(){
+
+   //切片在初始化时如果长度为0，则放入元素时会越界
+   var s1 = make([]map[int]string , 10 , 10)
+
+   //直接赋值时map未初始化
+   //s1[0][1] = "A"
+   
+   s1[0] = make(map[int]string , 10)
+   s1[0][1] = "A"
+   fmt.Println(s1)
+}
+```
+
+
+
+#### 值为切片的map
