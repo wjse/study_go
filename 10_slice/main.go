@@ -151,6 +151,14 @@ func sliceDel(){
 	fmt.Println(s1 , len(s1) , cap(s1))
 	fmt.Println(a1)
 	fmt.Printf("%p \n" , &a1)
+
+	array := [...]int{1,3,5,7,9,11,13,15,17}
+	slice := array[:]
+
+	//底层数组是依次将后面的元素向左移动
+	slice = append(slice[0:1] , slice[2:]...)
+	fmt.Println(slice)
+	fmt.Println(array)
 }
 
 //练习
