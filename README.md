@@ -1,3 +1,5 @@
+
+
 # study_go
 
 # 开始
@@ -1131,3 +1133,58 @@ func mapOfSlice(){
 
 
 #### 值为切片的map
+
+
+
+### 函数
+
+
+
+#### 函数定义
+
+```go
+func f(t argType)(ret returnType){
+  //logic
+  //return
+}
+
+//无参无返回
+func f1(){
+  
+}
+
+//无参有返回
+func f2()int{
+  return 0
+}
+
+//有参无返回
+func f3(a int){
+  
+}
+
+//多参多返回
+func f4(a int , b string)(int , string){
+  return a+5 , "abc"
+}
+
+//参数可以命名可以不命名
+//命名的返回值就相当于在函数中声明了一个变量
+func f5(x int , y int)(ret int){
+  ret = x + y
+  return
+}
+
+//参数的类型简写 , 当参数的类型一致时，可以将前面的参数类型省略
+func f6(x , y , z int , m , n string , i ,j bool) int {
+	fmt.Println(m , n , i , j)
+	return x * y / z
+}
+
+//可变长参数，必须放在参数列表最后
+//y的类型是切片
+func f7(x string , y ...int){
+	fmt.Println(x , y)
+}
+```
+
